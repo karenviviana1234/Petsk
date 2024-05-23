@@ -18,7 +18,7 @@ const MascotasForm = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
-
+ 
     const [formData, setFormData] = useState({
         nombre: '',
         categoria: '',
@@ -26,7 +26,7 @@ const MascotasForm = () => {
         raza: '',
         genero: ''
     });
-
+ 
     useEffect(() => {
         axiosClient.get('/opciones/genero').then((response) => {
             setGeneros(response.data);

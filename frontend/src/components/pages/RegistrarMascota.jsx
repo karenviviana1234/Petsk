@@ -1,11 +1,7 @@
-import React from 'react';
-import MascotasFrom from '../../moleculas/MascotasForm';
+import React from "react";
+import MascotasFrom from "../../moleculas/MascotasForm";
 
 const RegistrarMascota = () => {
-
-    return (
-        <MascotasFrom />
-    );
-}
-
+  return <MascotasFrom />;
+};
 export default RegistrarMascota;
