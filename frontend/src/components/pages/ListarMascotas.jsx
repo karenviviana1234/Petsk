@@ -19,7 +19,7 @@ const ListarMascota = () => {
     }, []);
 
     const getMascotas = () => {
-        axiosClient.get(`/mascotas/listar`).then((response) => {
+        axiosClient.get(`/mascotas/listarMascota`).then((response) => {
             setMascotas(response.data);
         });
     };
@@ -49,7 +49,7 @@ const ListarMascota = () => {
     
     const eliminar = (id) => {
         try {
-            axiosClient.delete(`/mascotas/eliminar/${id}`).then((response) => {
+            axiosClient.delete(`/mascotas/eliminarMascotas/${id}`).then((response) => {
                 console.log(response.data)
                 if(response.status == 200){
                     

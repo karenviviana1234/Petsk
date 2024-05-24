@@ -1,6 +1,5 @@
 import React, { Children, createContext, useState } from 'react'
 import axiosClient from '../src/axiosClient';
-import Swal from 'sweetalert2';
 
 export const MascotasContext = createContext()
 
@@ -13,7 +12,7 @@ export const MascotasProvider = ({ children }) => {
 
     const getMascotas = () => {
         try {
-            axiosClient.get('/mascotas/listar').then((response) => {
+            axiosClient.get('/mascotas/listarMascota').then((response) => {
                 setMascotas(response.data)
             })
         } catch (error) {
@@ -27,7 +26,7 @@ export const MascotasProvider = ({ children }) => {
             return;
         }
         try {
-            const response = await axiosClient.get(`/mascotas/buscar/${id}`);
+            const response = await axiosClient.get(`/mascotas/buscarMascota/${id}`);
             setMascota(response.data[0]);
         } catch (error) {
             console.log('Error del servidor' + error);

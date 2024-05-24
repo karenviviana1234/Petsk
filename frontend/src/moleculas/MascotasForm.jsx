@@ -28,13 +28,13 @@ const MascotasForm = () => {
     });
  
     useEffect(() => {
-        axiosClient.get('/opciones/genero').then((response) => {
+        axiosClient.get('/opcion/genero').then((response) => {
             setGeneros(response.data);
         });
-        axiosClient.get('/opciones/razas').then((response) => {
+        axiosClient.get('/opcion/razas').then((response) => {
             setRazas(response.data);
         });
-        axiosClient.get('/opciones/categorias').then((response) => {
+        axiosClient.get('/opcion/categorias').then((response) => {
             setCategorias(response.data);
         });
     }, []);
@@ -80,7 +80,7 @@ const MascotasForm = () => {
 
         try {
             if (mode === "update") {
-                await axiosClient.put(`/mascotas/actualizar/${id}`, datosSubmit);
+                await axiosClient.put(`/mascotas/actualizarMascota/${id}`, datosSubmit);
             } else {
                 datosSubmit.append('dueno', user.id_user);
                 await axiosClient.post(`/mascotas/registrarMascotas`, datosSubmit);
@@ -101,7 +101,7 @@ const MascotasForm = () => {
                 <img className='flex justify-between rounded-full' src={iconClose} alt="" />
             </div>
             <div className='mt-16'>
-                <img className='rounded-full' src={mode === 'create' ? photoIcon : `http://localhost:3000/img/${mascota.imagen}`} alt="Foto de mascota" />
+                <img className='rounded-full' src={mode === 'create' ? photoIcon : `http://localhost:3000/img/${mascota.imagen}`}/>
             </div>
             <form onSubmit={handleSubmit} className='w-full max-w-sm pt-24'>
                 <div className='mb-4'>
@@ -109,7 +109,7 @@ const MascotasForm = () => {
                         type='text'
                         id='nombre'
                         name='nombre'
-                        placeholder='Nombre'
+                        placeholder='Nombre Mascota'
                         value={formData.nombre}
                         onChange={handleChange}
                         className='w-full bg-[#8d9db9] px-3 py-2 rounded-3xl border border-gray-400  focus:outline-none ml-5 placeholder-blue-950'
@@ -123,7 +123,7 @@ const MascotasForm = () => {
                         onChange={handleChange}
                         name="raza"
                         id="raza">
-                        <option value="" hidden> Seleccione la raza... </option>
+                        <option value="" hidden> Seleccione la raza. </option>
                         {razas.map(race => (
                             <option key={race.id_raza} value={race.id_raza}> {race.nombre_raza} </option>
                         ))}
@@ -135,7 +135,7 @@ const MascotasForm = () => {
                         value={formData.categoria}
                         onChange={handleChange}
                         id="">
-                        <option value="" hidden> Seleccione categoria... </option>
+                        <option value="" hidden> Seleccione categoria. </option>
                         {categorias.map(categoria => (
                             <option key={categoria.id_categoria} value={categoria.id_categoria}> {categoria.nombre_categoria} </option>
                         ))}
@@ -165,7 +165,7 @@ const MascotasForm = () => {
                         value={formData.genero}
                         onChange={handleChange}
                         id="">
-                        <option value="" hidden> Seleccione Genero... </option>
+                        <option value="" hidden> Seleccione Genero</option>
                         {generos.map(genero => (
                             <option key={genero.id_genero} value={genero.id_genero}> {genero.nombre_genero} </option>
                         ))}
@@ -184,4 +184,3 @@ const MascotasForm = () => {
 }
 
 export default MascotasForm;
-//subiendo

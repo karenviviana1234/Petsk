@@ -1,5 +1,4 @@
 import { pool } from "../database/conexion.js"
-import { query } from "express"
 
 export const listarRazas = async (req, res) => {
     try {

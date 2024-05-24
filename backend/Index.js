@@ -13,7 +13,7 @@ servidor.use(body_parser.urlencoded({extend: false}))
 
 servidor.use('/mascotas', MascotasRoute)
 servidor.use('/user', UserRoute)
-servidor.use('/opciones', opcionesRoute)
+servidor.use('/opcion', opcionesRoute)
 
 servidor.set("view engine", "ejs")
 servidor.set("views", "./view")

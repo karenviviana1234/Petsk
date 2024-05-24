@@ -4,10 +4,10 @@ import { validarToken } from "../controllers/autenticacion.js";
 
 const MascotasRoute = Router()
 
-MascotasRoute.get('/listar',validarToken, listarMascotas)
+MascotasRoute.get('/listarMascota',validarToken, listarMascotas)
 MascotasRoute.post('/registrarMascotas', validarToken, cargarImage, registrarMascota)
-MascotasRoute.put('/actualizar/:id', validarToken, cargarImage, actualizarMascota)
-MascotasRoute.get('/buscar/:id',validarToken, buscarMascota)
-MascotasRoute.delete('/eliminar/:id',validarToken, eliminarMascota)
+MascotasRoute.put('/actualizarMascota/:id', validarToken, cargarImage, actualizarMascota)
+MascotasRoute.get('/buscarMascota/:id',validarToken, buscarMascota)
+MascotasRoute.delete('/eliminarMascota/:id',validarToken, eliminarMascota)
 
 export default MascotasRoute
