@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-05-2024 a las 01:49:12
+-- Tiempo de generación: 25-05-2024 a las 02:51:32
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -74,6 +74,15 @@ CREATE TABLE `mascotas` (
   `fk_genero` int(11) NOT NULL,
   `fk_dueno` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `mascotas`
+--
+
+INSERT INTO `mascotas` (`id`, `nombre_mascota`, `fk_raza`, `fk_categoria`, `imagen`, `fk_genero`, `fk_dueno`) VALUES
+(20, 'Sacha', 2, 2, 'photo-sm-4.jpg', 1, 1),
+(22, 'Lulu', 4, 2, 'photo-sm-1.jpg', 1, 1),
+(23, 'Lulu', 6, 2, 'photo-sm-2.jpg', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -177,7 +186,7 @@ ALTER TABLE `generos`
 -- AUTO_INCREMENT de la tabla `mascotas`
 --
 ALTER TABLE `mascotas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `razas`

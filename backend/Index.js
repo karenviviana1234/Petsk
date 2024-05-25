@@ -21,9 +21,9 @@ servidor.set("views", "./view")
 servidor.use(express.static('./public'))
 
 servidor.get("/document", (req, res) => {
-    res.render("document.ejs")
+    res.render("DocumentKaren.ejs")
 })
 
 servidor.listen(3000, () => {
-    console.log('Servidor rodando na porta 3000');
+    console.log('Servidor funcionando');
 })

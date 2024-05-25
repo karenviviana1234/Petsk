@@ -22,7 +22,7 @@ export const MascotasProvider = ({ children }) => {
 
     const getMascotasId = async (id) => {
         if (!id) {
-            console.error("No ID provided to getMascotasId");
+            console.error("No se encontro el ID");
             return;
         }
         try {
@@ -35,7 +35,7 @@ export const MascotasProvider = ({ children }) => {
 
     const deleteMascotas = (id) => {
         try {
-            axiosClient.delete(`/mascotas/eliminar/${id}`).then((response) => {
+            axiosClient.delete(`/mascotas/eliminarMascota/${id}`).then((response) => {
                 alert(response.data.message)
             })
         } catch (error) {
@@ -43,6 +43,8 @@ export const MascotasProvider = ({ children }) => {
         }
     }
 
+
+    
   return (
     <MascotasContext.Provider
         value={{

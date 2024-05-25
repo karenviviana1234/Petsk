@@ -29,6 +29,10 @@ const ConsultarMascota = ({ match }) => {
     }   
 
     
+    const logout = () => {
+        localStorage.clear();
+        navigate('/');
+    }
 
     return (
         <div
@@ -38,8 +42,9 @@ const ConsultarMascota = ({ match }) => {
             <div className='flex mt-28 items-center justify-between'>
                 <FaAngleLeft className='mr-20 flex text-white text-xl cursor-pointer' onClick={volver} />
                 <label className='flex mr-20 text-white font-semibold'> Consultar mascota </label>
-                <img className='flex justify-between rounded-full' src={iconClose} alt="" />
-            </div>
+                <div className='ml-10'>
+                    <img className='rounded-full cursor-pointer' src={iconClose} onClick={() => logout()} alt="Cerrar" />
+                </div>            </div>
             <div className='mt-16 mb-16'>
                 <img className='rounded-full w-40' src={`http://localhost:3000/img/${mascota.imagen}`} alt={mascota.imagen} />
             </div>
