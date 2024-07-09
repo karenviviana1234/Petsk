@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-05-2024 a las 02:51:32
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Tiempo de generación: 20-05-2024 a las 05:34:28
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,194 +24,166 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `categorias`
+-- Estructura de tabla para la tabla `categories`
 --
 
-CREATE TABLE `categorias` (
-  `id_categoria` int(11) NOT NULL,
-  `nombre_categoria` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `categorias`
---
-
-INSERT INTO `categorias` (`id_categoria`, `nombre_categoria`) VALUES
-(1, 'Perro'),
-(2, 'Gato');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `generos`
---
-
-CREATE TABLE `generos` (
-  `id_genero` int(11) NOT NULL,
-  `nombre_genero` enum('macho','hembra') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `generos`
---
-
-INSERT INTO `generos` (`id_genero`, `nombre_genero`) VALUES
-(1, 'macho'),
-(2, 'hembra');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `mascotas`
---
-
-CREATE TABLE `mascotas` (
+CREATE TABLE `categories` (
   `id` int(11) NOT NULL,
-  `nombre_mascota` varchar(200) NOT NULL,
-  `fk_raza` int(11) NOT NULL,
-  `fk_categoria` int(11) NOT NULL,
-  `imagen` varchar(200) DEFAULT NULL,
-  `fk_genero` int(11) NOT NULL,
-  `fk_dueno` int(11) DEFAULT NULL
+  `name` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `mascotas`
+-- Volcado de datos para la tabla `categories`
 --
 
-INSERT INTO `mascotas` (`id`, `nombre_mascota`, `fk_raza`, `fk_categoria`, `imagen`, `fk_genero`, `fk_dueno`) VALUES
-(20, 'Sacha', 2, 2, 'photo-sm-4.jpg', 1, 1),
-(22, 'Lulu', 4, 2, 'photo-sm-1.jpg', 1, 1),
-(23, 'Lulu', 6, 2, 'photo-sm-2.jpg', 2, 1);
+INSERT INTO `categories` (`id`, `name`) VALUES
+(1, 'catone'),
+(2, 'catdos'),
+(3, 'cattres'),
+(4, 'catcuatro');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `razas`
+-- Estructura de tabla para la tabla `genders`
 --
 
-CREATE TABLE `razas` (
-  `id_raza` int(11) NOT NULL,
-  `nombre_raza` varchar(200) NOT NULL
+CREATE TABLE `genders` (
+  `id` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `razas`
+-- Volcado de datos para la tabla `genders`
 --
 
-INSERT INTO `razas` (`id_raza`, `nombre_raza`) VALUES
-(1, 'Bulldog'),
-(2, 'Pastor Aleman'),
-(3, 'Bull Terrier'),
-(4, 'Gran Dánes\r\n'),
-(5, 'Gato Persa'),
-(6, 'Mau egipcio'),
-(7, 'Bombay');
+INSERT INTO `genders` (`id`, `name`) VALUES
+(1, 'hembra'),
+(3, 'Macho');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `user`
+-- Estructura de tabla para la tabla `pets`
 --
 
-CREATE TABLE `user` (
-  `id_user` int(11) NOT NULL,
-  `nombres` varchar(200) NOT NULL,
-  `email` varchar(200) NOT NULL,
-  `password` varchar(200) NOT NULL
+CREATE TABLE `pets` (
+  `id` int(11) NOT NULL,
+  `race_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `Photo` varchar(64) NOT NULL,
+  `gender_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `user`
+-- Volcado de datos para la tabla `pets`
 --
 
-INSERT INTO `user` (`id_user`, `nombres`, `email`, `password`) VALUES
-(1, 'karen Diaz', 'Karen123@gmail.com', 'karen123456');
+INSERT INTO `pets` (`id`, `race_id`, `category_id`, `Photo`, `gender_id`) VALUES
+(1, 1, 4, '', 1),
+(2, 1, 3, 'asd', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `races`
+--
+
+CREATE TABLE `races` (
+  `id` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `races`
+--
+
+INSERT INTO `races` (`id`, `name`) VALUES
+(1, 'poodle'),
+(2, 'bulldog'),
+(3, 'chihuahua');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `fullname` varchar(32) NOT NULL,
+  `email` varchar(32) NOT NULL,
+  `password` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `fullname`, `email`, `password`) VALUES
+(123, 'admin1', 'admin123', 'admin1235'),
+(1234, 'admin2', 'admin1234', 'admin1234'),
+(1236, 'admin1', 'admin123', '$2b$10$iSOS4eSWRsIievXqbTExCOhbon6bUH6bReXGPbzH5kBErXTgqRz0u'),
+(12361, 'admin', 'admin', '$2b$10$pWbity0b0NSOq4.WbBZxzuzce9oaYioENFoCl2CdXjnjCgTNN4VEm');
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `categorias`
+-- Indices de la tabla `categories`
 --
-ALTER TABLE `categorias`
-  ADD PRIMARY KEY (`id_categoria`);
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `generos`
+-- Indices de la tabla `genders`
 --
-ALTER TABLE `generos`
-  ADD PRIMARY KEY (`id_genero`);
+ALTER TABLE `genders`
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `mascotas`
+-- Indices de la tabla `pets`
 --
-ALTER TABLE `mascotas`
+ALTER TABLE `pets`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `pertenecer` (`fk_dueno`),
-  ADD KEY `ser` (`fk_raza`),
-  ADD KEY `hacer` (`fk_categoria`),
-  ADD KEY `identificar` (`fk_genero`);
+  ADD KEY `race_ids` (`race_id`),
+  ADD KEY `category_ids` (`category_id`),
+  ADD KEY `genders_ids` (`gender_id`);
 
 --
--- Indices de la tabla `razas`
+-- Indices de la tabla `races`
 --
-ALTER TABLE `razas`
-  ADD PRIMARY KEY (`id_raza`);
+ALTER TABLE `races`
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `user`
+-- Indices de la tabla `users`
 --
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id_user`);
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `categorias`
+-- AUTO_INCREMENT de la tabla `pets`
 --
-ALTER TABLE `categorias`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `generos`
---
-ALTER TABLE `generos`
-  MODIFY `id_genero` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `mascotas`
---
-ALTER TABLE `mascotas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
-
---
--- AUTO_INCREMENT de la tabla `razas`
---
-ALTER TABLE `razas`
-  MODIFY `id_raza` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT de la tabla `user`
---
-ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `pets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restricciones para tablas volcadas
 --
 
 --
--- Filtros para la tabla `mascotas`
+-- Filtros para la tabla `pets`
 --
-ALTER TABLE `mascotas`
-  ADD CONSTRAINT `hacer` FOREIGN KEY (`fk_categoria`) REFERENCES `categorias` (`id_categoria`),
-  ADD CONSTRAINT `identificar` FOREIGN KEY (`fk_genero`) REFERENCES `generos` (`id_genero`),
-  ADD CONSTRAINT `pertenecer` FOREIGN KEY (`fk_dueno`) REFERENCES `user` (`id_user`),
-  ADD CONSTRAINT `ser` FOREIGN KEY (`fk_raza`) REFERENCES `razas` (`id_raza`);
+ALTER TABLE `pets`
+  ADD CONSTRAINT `category_ids` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
+  ADD CONSTRAINT `genders_ids` FOREIGN KEY (`gender_id`) REFERENCES `genders` (`id`),
+  ADD CONSTRAINT `race_ids` FOREIGN KEY (`race_id`) REFERENCES `races` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

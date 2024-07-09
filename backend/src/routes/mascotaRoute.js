@@ -1,13 +1,16 @@
 import { Router } from "express";
-import { registrarMascota, listarMascotas, actualizarMascota, eliminarMascota, buscarMascota, cargarImage } from "../controllers/controller.mascota.js"
-import { validarToken } from "../controllers/autenticacion.js";
+import { actualizarMascota, buscarMascota2, buscarMascota, cargarPhoto, CrearMascota, eliminarMascota, listarMascotas } from "../controllers/controller.mascota.js";
+import {  validarToken } from "../controllers/autenticacion.js";
 
-const MascotasRoute = Router()
 
-MascotasRoute.get('/listarMascota',validarToken, listarMascotas)
-MascotasRoute.post('/registrarMascotas', validarToken, cargarImage, registrarMascota)
-MascotasRoute.put('/actualizarMascota/:id', validarToken, cargarImage, actualizarMascota)
-MascotasRoute.get('/buscarMascota/:id',validarToken, buscarMascota)
-MascotasRoute.delete('/eliminarMascota/:id',validarToken, eliminarMascota)
+const routerMascota = Router()
 
-export default MascotasRoute
+routerMascota.post('/registrarMascota',validarToken,cargarPhoto,CrearMascota)
+routerMascota.get('/listar',validarToken,listarMascotas)
+routerMascota.get('/buscar2/:id',validarToken,buscarMascota2)
+routerMascota.put('/actualizar/:id',validarToken,cargarPhoto,actualizarMascota)
+routerMascota.delete('/eliminar/:id',validarToken,eliminarMascota)
+routerMascota.get('/buscar/:id',validarToken,buscarMascota)
+
+
+export default routerMascota

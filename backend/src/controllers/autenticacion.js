@@ -1,29 +1,32 @@
-
-import { pool } from "./../database/conexion.js";
-import jwt from "jsonwebtoken";
+import { pool } from "../database/conexion.js";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export const validar = async (req, res) => {
-
     try {
+        let { email, password } = req.body;
 
-        let {email, password} = req.body
-        let sql = `SELECT email, password FROM user WHERE email='${email}' and password='${password}'`
+        const [userResult] = await pool.promise().query('SELECT * FROM users WHERE email = ?', [email]);
 
-        const [user] = await pool.query(sql)
+        if (userResult.length > 0) {
+            const user = userResult[0];
 
-        if(user.length>0){
-            let token = jwt.sign({user}, process.env.AUT_SECRET, {expiresIn:process.env.AUT_EXPIRE})
+            const match = await bcrypt.compare(password, user.password);
 
-            return res.status(200).json({ 'user':user,'token':token})
-        }else{
-            res.status(404).json({'status': 404, 'message': 'Usuario no autorizado'})
+            if (match) {
+                const token = jwt.sign({ user }, process.env.AUT_SECRET, { expiresIn: process.env.AUT_EXPIRE });
+
+                return res.status(200).json({ user, token });
+            } else {
+                return res.status(401).json({ status: 401, message: 'Contraseña incorrecta' });
+            }
+        } else {
+            return res.status(404).json({ status: 404, message: 'Usuario no encontrado' });
         }
-
     } catch (error) {
-        res.status(500).json({status: 500, message: 'Error del servidor' + error})
+        return res.status(500).json({ status: 500, message: 'Error del servidor: ' + error.message });
     }
-    
-}
+};
 
 export const validarToken = async (req, res, next) => {
 

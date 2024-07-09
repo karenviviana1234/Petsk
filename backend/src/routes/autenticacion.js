@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { validar } from "../controllers/autenticacion.js";
 
-const UserRoute = Router()
+const routerValidar =Router()
 
-UserRoute.post('/validacion', validar)
+routerValidar.post('/validar',validar)
 
-export default UserRoute
+export default routerValidar

@@ -1,157 +1,217 @@
+import { query } from "express";
 import { pool } from "../database/conexion.js";
-import multer from "multer";
+import multer from "multer"
 
-const storage = multer.diskStorage(
-    {
-        destination: function(req,file,cb){
-            cb(null, "public/img")
-        },
-        filename: function(req,file, cb){
-            cb(null, file.originalname)
-        }
-    }
-)
+const storage = multer.diskStorage({
+  destination: function(req,file,cb){
+     cb(null, "public/img")
+  },
+  filename:function(req,file,cb){
+    cb(null, file.originalname)
+  }
+})
 
 const upload = multer({storage: storage})
-export const cargarImage = upload.single('imagen')
 
-export const registrarMascota = async (req, res) => {
-    try {
-        const {nombre, raza, genero,categoria, dueno} = req.body
-        let imagen = req.file.originalname  
+export const cargarPhoto = upload.single('photo')
 
-        let sql = `INSERT INTO mascotas (nombre_mascota, fk_raza, fk_categoria, imagen, fk_genero, fk_dueno) VALUES (?, ?, ?, ?, ?, ?)`
 
-        const [rows] = await pool.query(sql, [nombre, raza, categoria, imagen, genero, dueno])
+export const CrearMascota = async (req, res) => {
+  try {
+      const { Nombre, race_id, category_id, gender_id } = req.body;
+      let photo = req.file ? req.file.originalname : null;
 
-        if(rows.affectedRows > 0){
-            res.status(200).json({
-                status: 200,
-                message: 'Se registró con éxito la mascota'
-            })
-        } else {
-            res.status(404).json({
-                status: 404,
-                message: 'No se pudo registrar la mascota'
-            })
-        }
+      const [resultado] = await pool.promise().query(
+          'INSERT INTO pets (Nombre, race_id, category_id, Photo, gender_id) VALUES (?, ?, ?, ?, ?)',
+          [Nombre, race_id, category_id, photo, gender_id]
+      );
 
-    } catch (error) {   
-        res.status(500).json({
-            status: 500,
-            message: 'Error del servidor: ' + error
-        })
-    }
-}
+      if (resultado.affectedRows > 0) {
+          res.status(200).json({ message: 'Mascota registrada con éxito' });
+      } else {
+          res.status(404).json({ message: 'No se pudo registrar la Mascota' });
+      }
+  } catch (error) {
+      res.status(500).json({ message: 'Error del servidor: ' + error.message });
+  }
+};
+
 
 
 export const listarMascotas = async (req, res) => {
-    try {
-        let sql = `SELECT id, nombre_mascota, ra.*, nombre_categoria AS categoria, nombre_genero AS genero, imagen 
-      FROM mascotas
-      JOIN razas ra ON fk_raza = id_raza 
-      JOIN categorias ON fk_categoria = id_categoria 
-      JOIN generos ON fk_genero = id_genero
-    `;
+  try {
+    const [pets] = await pool
+  .promise()
+  .query(
+    `SELECT 
+      nombre, 
+      pets.id, 
+      races.name AS race_name, 
+      categories.name AS category_name, 
+      pets.photo, 
+      genders.name AS gender_name 
+    FROM 
+      pets 
+    JOIN 
+      races ON pets.race_id = races.id 
+    JOIN 
+      categories ON pets.category_id = categories.id 
+    JOIN 
+      genders ON pets.gender_id = genders.id;`
+  );
 
-        const [result] = await pool.query(sql)
-        if(result.length>0){
-            res.status(200).json(result)
-        }else{
-            res.status(404).json({
-                status: 404,
-                message: 'No se encontraron mascotas'
-            })
-        }
-    } catch (error) {  
-        res.status(500).json({
-            status: 500,
-            message: 'Error del servidor' + error
-        })
+    if (pets.length > 0) {
+      res.status(200).json({ pets });
+    } else {
+      res.status(404).json({ message: "No hay mascotas registrados" });
     }
-}
+  } catch (error) {
+    res.status(500).json({ message: "Error del servidor: " + error.message });
+  }
+};
+
+export const buscarMascota2 = async(req,res)=>{
+  try {
+    const {id} =req.params
+    const [pets] = await pool.promise().query(
+        `SELECT 
+            pets.id, 
+            pets.nombre, 
+            races.id AS race_id, 
+            races.name AS race_name, 
+            categories.id AS category_id, 
+            categories.name AS category_name, 
+            pets.photo, 
+            genders.id AS gender_id, 
+            genders.name AS gender_name 
+        FROM 
+            pets 
+        JOIN 
+            races ON pets.race_id = races.id 
+        JOIN 
+            categories ON pets.category_id = categories.id 
+        JOIN 
+            genders ON pets.gender_id = genders.id 
+        WHERE 
+            pets.id = ?`, 
+        [id]
+    );
+    
+    if (pets.length > 0) {
+      res.status(200).json({ pets });
+    } else {
+      res.status(404).json({ message: "No hay usuarios registrados" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error del servidor: " + error.message });
+  }
+};
 
 export const actualizarMascota = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { nombre, raza, genero, categoria } = req.body;
-        let imagen = req.file ? req.file.originalname : null;
-    
-        let sql = `
-          UPDATE mascotas SET 
-          nombre_mascota = IFNULL(?, nombre_mascota),  
-          fk_raza = IFNULL(?, fk_raza),  
-          fk_genero = IFNULL(?, fk_genero),  
-          fk_categoria = IFNULL(?, fk_categoria)
-        `;
-    
-        const params = [nombre, raza, genero, categoria];
-        if (imagen) {
-          sql += `, imagen = ?`;
-          params.push(imagen);
-        }
-    
-        sql += ` WHERE id = ?`;
-        params.push(id);
-    
-        const [rows] = await pool.query(sql, params);
-    
-        if (rows.affectedRows > 0) {
-          res.status(200).json({message: "Mascota actualizada éxitosamente",});
-        } else {
-          res.status(404).json({message: "Error al actualizar la mascota",});
-        }
-      } catch (error) {
-        res.status(500).json({ message: "Error del servidor" + error,});
-      }
-    };
-    
+  try {
+    const { id } = req.params;
+    const { Nombre, race_id, category_id, gender_id } = req.body;
 
-export const buscarMascota = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        let sql = `
-          SELECT id, nombre_mascota, imagen, ra.*, ca.*, ge.* 
-          FROM mascotas
-          JOIN razas ra ON fk_raza = id_raza
-          JOIN categorias ca ON fk_categoria = id_categoria
-          JOIN generos ge ON fk_genero = id_genero
-          WHERE id = ?
-        `;
+    const [anteriorPet] = await pool.promise().query("SELECT * FROM pets WHERE id=?", [id]);
+    const [photoAnterior] = await pool.promise().query(`SELECT photo FROM pets WHERE id=?`,[id])
     
-        const [rows] = await pool.query(sql, [id]);
-        if (rows.length > 0) {
-          res.status(200).json(rows);
-        } else {
-          res.status(404).json({message: "Error al encontrar esa mascota con ese ID",});
-        }
-      } catch (error) {
-        res.status(500).json({message: "Error del servidor" + error,});
-      }
-    };
+    if (!anteriorPet.length) {
+      return res.status(404).json({
+        message: "No se encontró ninguna mascota con el ID proporcionado",
+      });
+    }
+
+    let photo = photoAnterior[0].photo;
+    if (req.file) {
+      photo = req.file.originalname;
+    }
+
+    const [resultado] = await pool.promise().query(
+      `UPDATE pets SET race_id = ?, category_id = ?, photo = ?, gender_id = ?, Nombre = ? WHERE id = ?`,
+      [race_id || anteriorPet[0].race_id, category_id || anteriorPet[0].category_id, photo, gender_id || anteriorPet[0].gender_id, Nombre || anteriorPet[0].Nombre, id]
+    );
+
+    if (resultado.affectedRows > 0) {
+      res.status(200).json({
+        message: "Se actualizó la mascota correctamente",
+      });
+    } else {
+      res.status(500).json({
+        message: "No se pudo actualizar la mascota",
+      });
+    }
+  } catch (error) {
+    console.error("Error al actualizar la mascota: ", error);
+    res.status(500).json({
+      message: "Error del servidor",
+      error: error.message
+    });
+  }
+};
+
+
+
+
+export const buscarMascota = async(req,res) =>{
+  try {
+    const {id} = req.params
+    const [resultado] = await pool
+    .promise()
+    .query(
+      `SELECT 
+        pets.nombre, 
+        pets.id, 
+        races.name AS race_name, 
+        categories.name AS category_name, 
+        pets.photo, 
+        genders.name AS gender_name 
+      FROM 
+        pets 
+      JOIN 
+        races ON pets.race_id = races.id 
+      JOIN 
+        categories ON pets.category_id = categories.id 
+      JOIN 
+        genders ON pets.gender_id = genders.id 
+      WHERE 
+        pets.id = ?`,
+      [id]
+    );
+  
+    if (resultado.length>0) {
+      res.status(200).json({
+        mascota : resultado
+      })
+    } else {
+      res.status(404).json({
+        message:'Error al Buscar a la mascota '
+      })
+    }
+  } catch (error) {
+    console.log('Error del servidor:  ',error)
+  }
+}
 
 export const eliminarMascota = async (req, res) => {
-    try {
-        const {id} = req.params
+  try {
+    const { id } = req.params;
 
-        let sql = `DELETE FROM mascotas WHERE id = ?`
-        const [rows] = await pool.query(sql, id)
-        if(rows.affectedRows>0){
-            res.status(200).json({
-                status: 200,
-                message: 'Se eliminó con éxito la mascota'
-            })
-        }else{
-            res.status(403).json({
-                status: 403,
-                message: 'No fue posible eliminar la mascota'
-            })
-        }
-    } catch (error) {
-        res.status(500).json({
-            status: 500,
-            message: 'Error del servidor' + error
-        })
+    const [resultado] = await pool
+      .promise()
+      .query("DELETE from pets WHERE id=?", [id]);
+
+    if (resultado.affectedRows > 0) {
+      res.status(200).json({
+        message: "Se elimino la mascota",
+      });
+    } else {
+      res.status(404).json({
+        message: "No se pudo eliminar la mascota",
+      });
     }
-}
+  } catch (error) {
+    res.status(500).json({
+      message: "Error en el servidor " + error,
+    });
+  }
+};
