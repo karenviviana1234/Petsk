@@ -1,37 +1,25 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom"
-import 'tailwindcss/tailwind.css';
-
-import Login from "./components/pages/Login.jsx"
-import ProtectedRoute from "./ProtectedRoute.jsx"
-import ListarMascota from "./components/pages/ListarMascotas.jsx";
-import RegistrarMascota from "./components/pages/RegistrarMascota.jsx";
-import ActualizarMascota from "./components/pages/ActualizarMascota.jsx";
-import ConsultarMascota from "./components/pages/ConsultarMAscotas.jsx";
-import { MascotasProvider } from "../context/MascotasContext.jsx";
-
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Login from './pages/Login';
+import ListarMascotas from './pages/ListarMascotas';
+import AgregarMascotas from './pages/AgregarMascota';
+import ConsultarMascota from './pages/ConsultarMascota';
+import ModificarMascotas from './pages/ModificarMascota';
 
 function App() {
-
   return (
-   
-        <MascotasProvider>
-          <BrowserRouter>    
-          
-
-          {/*   <Sidebar /> */}
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route element={<ProtectedRoute />} > 
-                <Route path="/inicio" element={<ListarMascota />} />
-                <Route path="/register" element={<RegistrarMascota />} />
-                <Route path="/actualizar/:id" element={<ActualizarMascota />} />
-                <Route path="/consultar/:id" element={<ConsultarMascota />} />
-              </Route>
-            </Routes> 
-          </BrowserRouter>
-        </MascotasProvider>
-    
-  )
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/listar" element={<ListarMascotas />} />
+          <Route path="/editar/:id" element={<ModificarMascotas />} />
+          <Route path='/registrar' element={<AgregarMascotas/>}/>
+          <Route path='/buscar/:id' element={<ConsultarMascota/>}/>
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
 export default App;
